@@ -51,9 +51,9 @@ public class PlayerRaycastController : MonoBehaviour
             health--;
             healthText.text = $"Health - {health}/{maxHealth}";
             Destroy(collision.gameObject);
+            Handheld.Vibrate();
             if (health <= 0)
             {
-                Handheld.Vibrate();
                 Debug.Log("Game Over");
                 Application.Quit();
             }
