@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class ZombieController : MonoBehaviour
 {
@@ -10,9 +11,12 @@ public class ZombieController : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private float moveSpeed = 1.0f;
     [SerializeField] private float fallingBlendTime = 0.2f;
+
+    private NavMeshAgent agent;
     bool dying = false;
     void Start()
     {
+        agent = GetComponent<NavMeshAgent>();
         animator.SetBool("Walking", true);
     }
 
@@ -26,14 +30,25 @@ public class ZombieController : MonoBehaviour
             EnemyDied();
         }
 
-        Vector3 moveDirection = GameManager.Instance.PlayerTransform.position - transform.position;
-        moveDirection.Normalize();
-        moveDirection.y = 0;
+        if (!GameManager.planesFound)
+        {
+            //Application.Quit();
+            Vector3 moveDirection = GameManager.Instance.PlayerTransform.position - transform.position;
+            moveDirection.Normalize();
+            moveDirection.y = 0;
 
-        transform.position += moveDirection * moveSpeed * Time.deltaTime;
-        Vector3 posToLookAt = GameManager.Instance.PlayerTransform.position;
-        posToLookAt.y = transform.position.y;
-        transform.LookAt(posToLookAt);
+            transform.position += moveDirection * moveSpeed * Time.deltaTime;
+            Vector3 posToLookAt = GameManager.Instance.PlayerTransform.position;
+            posToLookAt.y = transform.position.y;
+            transform.LookAt(posToLookAt);
+        }
+        else
+        {
+            agent.SetDestination(GameManager.Instance.PlayerTransform.position);
+        }
+        
+
+        
     }
 
     public void EnemyDied()
@@ -48,7 +63,7 @@ public class ZombieController : MonoBehaviour
         //animator.SetBool("TakingDamage", true);
 
         //animator.Play("Z_FallingForward");
-        animator.CrossFade("Z_FallingForward", 0.2f);
+        animator.CrossFade("Z_FallingForward", fallingBlendTime);
         GetComponent<BoxCollider>().enabled = false;
 
         yield return new WaitForSeconds(4.0f);

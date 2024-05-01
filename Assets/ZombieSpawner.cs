@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.XR.ARFoundation;
 
 
@@ -63,6 +64,14 @@ public class ZombieSpawner : MonoBehaviour
         Vector3 newDirection = Quaternion.Euler(0, degree, 0) * playerForward;
         Vector3 spawnPos = newDirection * spawnDistance;
         spawnPos.y = GameManager.Instance.PlayerTransform.position.y - 1.25f;
+
+        if (GameManager.planesFound)
+        {
+            NavMeshHit hit;
+            NavMesh.SamplePosition(spawnPos, out hit, Mathf.Infinity, NavMesh.AllAreas);
+            spawnPos = hit.position;
+        }
+        
         
         Instantiate(zombiePrefab, spawnPos, Quaternion.identity);
     }

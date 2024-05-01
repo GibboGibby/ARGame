@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.AI;
+using Unity.VisualScripting;
+using Unity.AI.Navigation;
 
 
 [RequireComponent(typeof(ARPlaneMeshVisualizer), typeof(MeshRenderer), typeof(ARPlane))]
@@ -38,7 +41,21 @@ public class ARFeatheredPlaneMeshVisualizer : MonoBehaviour
 
     void ARPlane_boundaryUpdated(ARPlaneBoundaryChangedEventArgs eventArgs)
     {
+        GameManager.planesFound = true;
         GenerateBoundaryUVs(m_PlaneMeshVisualiser.mesh);
+
+        ARPlane tempPlane = eventArgs.plane;
+        NavMeshSurface tempNavMesh = tempPlane.gameObject.GetComponent<NavMeshSurface>();
+
+        if (tempNavMesh)
+        {
+            tempNavMesh.BuildNavMesh();
+        }
+        else
+        {
+            NavMeshSurface temp = tempPlane.AddComponent<NavMeshSurface>();
+            temp.BuildNavMesh();
+        }
     }
 
     void GenerateBoundaryUVs(Mesh mesh)

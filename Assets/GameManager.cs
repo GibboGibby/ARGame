@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
         private set { playerTransform = value; }
     }
 
+    public static bool planesFound = false;
 
     public static GameManager Instance { get; private set; }
     private void Awake()

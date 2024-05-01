@@ -40,6 +40,11 @@ public class PlayerRaycastController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        
+    }
+
+    public void EnemyHitPlayer(Collision collision)
+    {
         //Debug.Log("Collision Detected");
         if (collision.collider.CompareTag("Enemy"))
         {
@@ -48,6 +53,7 @@ public class PlayerRaycastController : MonoBehaviour
             Destroy(collision.gameObject);
             if (health <= 0)
             {
+                Handheld.Vibrate();
                 Debug.Log("Game Over");
                 Application.Quit();
             }

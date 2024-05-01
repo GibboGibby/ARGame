@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
         Physics.Raycast(mainCam.transform.position, mainCam.transform.forward, out hit, Mathf.Infinity);
         if (hit.collider.CompareTag("Enemy"))
         {
+            Handheld.Vibrate();
             Destroy(hit.collider.gameObject);
         }
     }
