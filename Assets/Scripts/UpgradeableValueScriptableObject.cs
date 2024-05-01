@@ -76,6 +76,16 @@ public abstract class UpgradeableValueScriptableObject<T> : ScriptableObject
         return upgrades[currentUpgrade + 1].cost;
     }
 
+    public string GetAllUpgradesAndCosts()
+    {
+        string returnStr = $"Default value - {defaultValue}\nNumber of upgrades - {upgrades.Count}\n";
+        for (int i = 0; i < upgrades.Count; i++)
+        {
+            returnStr += $"{i+1}th upgrade: value - {upgrades[i].value} and cost - {upgrades[i].cost}\n";
+        }
+        return returnStr;
+    }
+
     public void UpgradeValue()
     {
         currentUpgrade++;

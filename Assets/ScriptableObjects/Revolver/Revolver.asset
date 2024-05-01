@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b1adcce540d1da4d97b286ffb3082e0, type: 3}
   m_Name: Revolver
   m_EditorClassIdentifier: 
-  fireRate: {fileID: 11400000, guid: 25642e826fb3c514dbd4dfa7c7d05b72, type: 2}
-  ammoPerMagazine: {fileID: 11400000, guid: 206fbd495ff7b4e47ab2fca91fd693fd, type: 2}
+  cost: 0
+  unlocked: 1
+  unlockedByDefault: 1
+  fireRate: {fileID: 11400000, guid: 051e656e30364b74bb250c8b17d44fd0, type: 2}
+  ammoPerMagazine: {fileID: 11400000, guid: e896aecc71af9c248872b84bfdad93f6, type: 2}
