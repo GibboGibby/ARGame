@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 20662c372e3f6d8408574b7dfc521006, type: 3}
-  m_Name: AmmoCount
+  m_Script: {fileID: 11500000, guid: 45abe871605ee1245b512c0bde2d7d53, type: 3}
+  m_Name: ReloadSpeed
   m_EditorClassIdentifier: 
-  type: int
-  defaultValue: 6
+  type: float
+  defaultValue: 0
   upgrades: []

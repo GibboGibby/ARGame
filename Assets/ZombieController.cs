@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class ZombieController : MonoBehaviour
 {
@@ -11,6 +12,11 @@ public class ZombieController : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private float moveSpeed = 1.0f;
     [SerializeField] private float fallingBlendTime = 0.2f;
+    [SerializeField] private Slider slider;
+
+    [SerializeField] private List<Collider> colliders = new List<Collider>();
+
+    private float health = 100f;
 
     private NavMeshAgent agent;
     bool dying = false;
@@ -56,15 +62,30 @@ public class ZombieController : MonoBehaviour
         StartCoroutine(EnemyDyingCoroutine());
     }
 
+    public void EnemyHit(float val)
+    {
+        if (dying) return;
+        health -= val;
+        slider.value = health;
+        if (health <= 0)
+            EnemyDied();
+    }
+
     IEnumerator EnemyDyingCoroutine()
     {
         dying = true;
+        GameManager.Instance.AddKilledPoints();
         //animator.SetBool("Walking", false);
         //animator.SetBool("TakingDamage", true);
 
         //animator.Play("Z_FallingForward");
         animator.CrossFade("Z_FallingForward", fallingBlendTime);
-        GetComponent<BoxCollider>().enabled = false;
+        slider.transform.parent.gameObject.SetActive(false);
+        foreach (Collider collider in colliders)
+        {
+            collider.enabled = false;
+        }
+        //GetComponent<BoxCollider>().enabled = false;
 
         yield return new WaitForSeconds(4.0f);
         Destroy(gameObject);

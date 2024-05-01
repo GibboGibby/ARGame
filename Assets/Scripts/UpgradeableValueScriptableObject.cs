@@ -6,6 +6,7 @@ using System;
 
 public class ScriptableObjectIdAttribute : PropertyAttribute { }
 
+
 #if UNITY_EDITOR
 [CustomPropertyDrawer(typeof(ScriptableObjectIdAttribute))]
 public class ScriptableObjectIdDrawer : PropertyDrawer
@@ -21,23 +22,26 @@ public class ScriptableObjectIdDrawer : PropertyDrawer
 }
 #endif
 
+ 
 public abstract class UpgradeableValueScriptableObject<T> : ScriptableObject
 {
-
+    
     [ScriptableObjectId]
     public string type = typeof(T).Name;
+    
+
 
     [System.Serializable]
     public struct Upgrade
     {
-        public T value;
-        public int cost;
+        [SerializeField] public T value;
+        [SerializeField] public int cost;
     }
 
     public T defaultValue;
 
     // These are in the form of the final    values not how they change
-    public List<Upgrade> upgrades = new List<Upgrade>();
+    [SerializeField] public List<Upgrade> upgrades = new List<Upgrade>();
 
     private int currentUpgrade = -1;
 
@@ -48,6 +52,11 @@ public abstract class UpgradeableValueScriptableObject<T> : ScriptableObject
     public void ResetProgress()
     {
         currentUpgrade = -1;
+    }
+
+    public int CurrentUpgradeNumber()
+    {
+        return currentUpgrade;
     }
 
     /// <summary>
@@ -79,6 +88,7 @@ public abstract class UpgradeableValueScriptableObject<T> : ScriptableObject
     public string GetAllUpgradesAndCosts()
     {
         string returnStr = $"Default value - {defaultValue}\nNumber of upgrades - {upgrades.Count}\n";
+        if (upgrades.Count == 0) { return returnStr; }
         for (int i = 0; i < upgrades.Count; i++)
         {
             returnStr += $"{i+1}th upgrade: value - {upgrades[i].value} and cost - {upgrades[i].cost}\n";
@@ -89,6 +99,10 @@ public abstract class UpgradeableValueScriptableObject<T> : ScriptableObject
     public void UpgradeValue()
     {
         currentUpgrade++;
+        if (currentUpgrade >= upgrades.Count-1)
+        {
+            currentUpgrade = upgrades.Count-1;
+        }
     }
 
     public bool IsFullyUpgraded()
@@ -97,22 +111,4 @@ public abstract class UpgradeableValueScriptableObject<T> : ScriptableObject
             return true;
         return false;
     }
-}
-
-[CreateAssetMenu(fileName = "FloatUpgradeValue", menuName = "ScriptableObjects/FloatUpgradableValue", order = 1)]
-public class FloatUpgradableValue : UpgradeableValueScriptableObject<float>
-{
-    /*
-    [MenuItem("Assets/Create/Weapons/UpgradeableValue")]
-    public static void CreateAsset()
-    {
-        ScriptableObject.CreateInstance<FloatUpgradableValue>();
-    }
-    */
-}
-
-[CreateAssetMenu(fileName = "IntUpgradableValue", menuName = "ScriptableObjects/IntUpgradableValue", order = 1)]
-public class IntUpgradableValue : UpgradeableValueScriptableObject<int>
-{
-
 }

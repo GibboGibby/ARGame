@@ -7,12 +7,23 @@ using UnityEditor;
 [CreateAssetMenu(fileName = "Weapon", menuName = "ScriptableObjects/Weapon", order = 1)]
 public class WeaponScriptableObject : ScriptableObject
 {
+
+    [Header("Cost and Unlock")]
     public float cost;
     public bool unlocked = false;
     public bool unlockedByDefault = false;
 
+
+
+    [Header("Stats")]
+    public bool singleShot = false;
     public FloatUpgradableValue fireRate;
     public IntUpgradableValue ammoPerMagazine;
+    public FloatUpgradableValue damage;
+    public FloatUpgradableValue reloadSpeed;
+    public IntUpgradableValue penetration;
+
+    
 
     public void ResetWeapon()
     {
@@ -20,5 +31,8 @@ public class WeaponScriptableObject : ScriptableObject
             unlocked = false;
         else
             unlocked = true;
+
+        fireRate.ResetProgress();
+        ammoPerMagazine.ResetProgress();
     }
 }

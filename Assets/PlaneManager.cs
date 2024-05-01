@@ -26,7 +26,5 @@ public class PlaneManager : MonoBehaviour
     {
         spawner.enabled = true;
         playingCanvas.SetActive(true);
-        //planeManager.detectionMode = UnityEngine.XR.ARSubsystems.PlaneDetectionMode.None;
-        planeManager.requestedDetectionMode = UnityEngine.XR.ARSubsystems.PlaneDetectionMode.None;
     }
 }

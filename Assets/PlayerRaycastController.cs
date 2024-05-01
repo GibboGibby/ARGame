@@ -31,9 +31,10 @@ public class PlayerRaycastController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, Mathf.Infinity))
         {
-            if (hit.collider.CompareTag("Enemy"))
+            if (hit.collider.CompareTag("Enemy") || hit.collider.CompareTag("EnemyHead"))
             {
-                hit.collider.gameObject.GetComponent<ZombieController>().EnemyDied();
+                Debug.Log("Collider found");
+                hit.collider.gameObject.GetComponent<EnemyCollision>().DamageEnemy(GameManager.Instance.GetCurrentWeapon().damage.GetValue());
             }
         }
     }
@@ -54,8 +55,11 @@ public class PlayerRaycastController : MonoBehaviour
             Handheld.Vibrate();
             if (health <= 0)
             {
-                Debug.Log("Game Over");
-                Application.Quit();
+                //Debug.Log("Game Over");
+                //Application.Quit();
+                GameManager.Instance.PlayerDied();
+
+
             }
         }
     }
