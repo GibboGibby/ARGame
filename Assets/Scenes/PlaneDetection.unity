@@ -1621,6 +1621,10 @@ MonoBehaviour:
   enemiesToSpawnPerWave:
     min: 1
     max: 5
+  timeBetweenSpawningPerWave:
+    min: 6
+    max: 2
+  timeToGetToFullWave: 50
 --- !u!4 &1930646416
 Transform:
   m_ObjectHideFlags: 0
