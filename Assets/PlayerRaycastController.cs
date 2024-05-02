@@ -1,7 +1,24 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
+
+class RaycastHitComprarer : IComparer
+{
+    public int Compare(object x, object y)
+    {
+        Vector3 playerPos = GameManager.Instance.PlayerTransform.position;
+        RaycastHit hit1 = (RaycastHit)x;
+        RaycastHit hit2 = (RaycastHit)y;
+        float distPlayerHit1 = Vector3.Distance(playerPos, hit1.point);
+        float distPlayerHit2 = Vector3.Distance(playerPos, hit2.point);
+        if (distPlayerHit1 < distPlayerHit2) return -1;
+        else if (distPlayerHit1 > distPlayerHit2) return 1;
+        else return 0;
+    }
+}
 
 public class PlayerRaycastController : MonoBehaviour
 {
@@ -20,23 +37,94 @@ public class PlayerRaycastController : MonoBehaviour
         healthText.text = $"Health - {health}/{maxHealth}";
     }
 
+
+
     // Update is called once per frame
-    void Update()
+
+    private float shootTimer = 0f;
+    private bool canShoot = true;
+
+    private void ShootTimer()
     {
-        
+        if (canShoot) return;
+
+        shootTimer += Time.deltaTime;
+        if (shootTimer >= GameManager.Instance.playerStats.currentWeapon.fireRate.GetValue())
+        {
+            canShoot = true;
+            shootTimer = 0f;
+        }
+
     }
 
-    public void Shoot()
+    public void Reload()
     {
-        RaycastHit hit;
-        if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, Mathf.Infinity))
+        if (reloading) return;
+        if (GameManager.Instance.GetCurrentAmmo() == GameManager.Instance.GetCurrentWeapon().ammoPerMagazine.GetValue()) return;
+        StartCoroutine(ReloadCoroutine());
+    }
+
+    IEnumerator ReloadCoroutine()
+    {
+        reloading = true;
+        yield return new WaitForSeconds(GameManager.Instance.GetCurrentWeapon().reloadSpeed.GetValue());
+        GameManager.Instance.ReloadWeapon();
+        reloading = false;
+    }
+
+    private bool reloading = false;
+    void Update()
+    {
+        if (reloading) return;  
+        ShootTimer();
+
+        if (shootingStarted && canShoot && GameManager.Instance.GetCurrentAmmo() > 0)
         {
-            if (hit.collider.CompareTag("Enemy") || hit.collider.CompareTag("EnemyHead"))
+            Shoot();
+            if (GameManager.Instance.playerStats.currentWeapon.singleShot)
             {
-                Debug.Log("Collider found");
-                hit.collider.gameObject.GetComponent<EnemyCollision>().DamageEnemy(GameManager.Instance.GetCurrentWeapon().damage.GetValue());
+                shootingStarted = false;
             }
         }
+    }
+
+    public void SetHealth(int val)
+    {
+        health = val;
+        healthText.text = $"Health - {health}/{GameManager.Instance.playerStats.MaxHealth}";
+    }
+
+
+    bool shootingStarted = false;
+    public void Shoot()
+    {
+        Debug.Log("Shooting");
+        canShoot = false;
+        GameManager.Instance.RemoveAmmo();
+        RaycastHit[] hits;
+        hits = Physics.RaycastAll(camera.transform.position, camera.transform.forward, Mathf.Infinity);
+        Array.Sort(hits, new RaycastHitComprarer());
+        for (int i = 0; i < hits.Length; i++)
+        {
+            if (i > GameManager.Instance.GetCurrentWeapon().penetration.GetValue()) break;
+            if (hits[i].collider.CompareTag("Enemy") || hits[i].collider.CompareTag("EnemyHead"))
+            {
+                Debug.Log("Collider found");
+                hits[i].collider.gameObject.GetComponent<EnemyCollision>().DamageEnemy(GameManager.Instance.GetCurrentWeapon().damage.GetValue());
+            }
+        }
+            
+
+    }
+
+    public void StartShoot()
+    {
+        shootingStarted = true;
+    }
+
+    public void StopShoot()
+    {
+        shootingStarted = false;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -50,7 +138,7 @@ public class PlayerRaycastController : MonoBehaviour
         if (collision.collider.CompareTag("Enemy"))
         {
             health--;
-            healthText.text = $"Health - {health}/{maxHealth}";
+            healthText.text = $"Health - {health}/{GameManager.Instance.playerStats.MaxHealth}";
             Destroy(collision.gameObject);
             Handheld.Vibrate();
             if (health <= 0)

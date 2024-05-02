@@ -8,7 +8,7 @@ struct WeaponStruct
     [SerializeField] public WeaponScriptableObject weapon;
 }
 
-enum WeaponsEnum
+public enum WeaponsEnum
 {
     Revolver,
     MachineGun,
@@ -36,6 +36,19 @@ public class WeaponManager : MonoBehaviour
             }
         }
         
+    }
+
+    public WeaponScriptableObject GetWeapon(WeaponsEnum weapon)
+    {
+        return weapons[weapon];
+    }
+
+    public void ResetProgress()
+    {
+        foreach (WeaponStruct weapon in weaponsPublic)
+        {
+            weapon.weapon.ResetWeapon();
+        }
     }
 
     // Update is called once per frame

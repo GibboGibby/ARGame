@@ -9,7 +9,7 @@ public class WeaponScriptableObject : ScriptableObject
 {
 
     [Header("Cost and Unlock")]
-    public float cost;
+    public int cost;
     public bool unlocked = false;
     public bool unlockedByDefault = false;
 
@@ -34,5 +34,8 @@ public class WeaponScriptableObject : ScriptableObject
 
         fireRate.ResetProgress();
         ammoPerMagazine.ResetProgress();
+        damage.ResetProgress();
+        reloadSpeed.ResetProgress();
+        penetration.ResetProgress();
     }
 }

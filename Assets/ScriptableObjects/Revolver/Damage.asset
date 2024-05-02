@@ -13,5 +13,10 @@ MonoBehaviour:
   m_Name: Damage
   m_EditorClassIdentifier: 
   type: float
-  defaultValue: 50
-  upgrades: []
+  defaultValue: 35
+  upgrades:
+  - value: 40
+    cost: 10000
+  - value: 50
+    cost: 100000
+  currentUpgrade: -1

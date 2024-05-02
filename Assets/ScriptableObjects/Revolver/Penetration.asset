@@ -14,4 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: int
   defaultValue: 0
-  upgrades: []
+  upgrades:
+  - value: 1
+    cost: 20000
+  - value: 2
+    cost: 40000
+  currentUpgrade: -1

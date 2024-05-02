@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,8 +12,11 @@ public class MenuManager : MonoBehaviour
         Menu,
         Upgrades,
         DefinePlayArea,
-        Game
+        Game,
+        GameOver
     }
+
+    public bool inGame;
 
     public static bool GoingToGame;
 
@@ -20,6 +24,7 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private GameObject Upgrades;
     [SerializeField] private GameObject DefinePlayArea;
     [SerializeField] private GameObject Game;
+    [SerializeField] private GameObject GameOver;
 
     void Start()
     {
@@ -50,6 +55,9 @@ public class MenuManager : MonoBehaviour
             case MenuState.Game:
                 ToGame();
                 break;
+            case MenuState.GameOver:
+                ToGameOver();
+                break;
             default:
                 break;
         }
@@ -57,10 +65,12 @@ public class MenuManager : MonoBehaviour
 
     public void HideAll()
     {
+        inGame = false;
         Menu.SetActive(false);
         Upgrades.SetActive(false);
         DefinePlayArea.SetActive(false);
         Game.SetActive(false);
+        GameOver.SetActive(false);
     }
 
     public void ToMenu()
@@ -69,9 +79,11 @@ public class MenuManager : MonoBehaviour
         Menu.SetActive(true);
     }
 
+
     public void ToGame()
     {
         HideAll();
+        inGame = true;
         if (!GameManager.planesFound && !MenuManager.GoingToGame)
         {
             MenuManager.GoingToGame = true;
@@ -97,6 +109,12 @@ public class MenuManager : MonoBehaviour
 
     }
 
+    public void ToGameOver()
+    {
+        HideAll();
+        GameOver.SetActive(true);
+    }
+
     public void ChangeState(string state)
     {
         switch (state.ToLower())
@@ -112,6 +130,9 @@ public class MenuManager : MonoBehaviour
                 break;
             case "game":
                 ChangeState(MenuState.Game);
+                break;
+            case "gameover":
+                ChangeState(MenuState.GameOver);
                 break;
             default:
                 Debug.Log("No state with that name");

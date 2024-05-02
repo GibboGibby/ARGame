@@ -24,12 +24,35 @@ public class ZombieController : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         animator.SetBool("Walking", true);
+        StartCoroutine(ZombieSpawning());
+    }
+
+    private bool spawning = false;
+    private IEnumerator ZombieSpawning()
+    {
+        slider.gameObject.SetActive(false);
+        spawning = true;
+        agent.enabled = false;
+        foreach (Collider collider in colliders)
+        {
+            collider.enabled = false;
+        }
+        animator.CrossFade("Z_FallingBack", 0.0f);
+        yield return new WaitForSeconds(3.0f);
+        slider.gameObject.SetActive(true);
+        animator.CrossFade("Z_Walk", 0.05f);
+        agent.enabled = true;
+        foreach (Collider collider in colliders)
+        {
+            collider.enabled = true;
+        }
+        spawning = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (dying) return;
+        if (dying || spawning) return;
 
         if (Input.GetKeyDown(KeyCode.P))
         {

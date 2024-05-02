@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System;
+using UnityEngine.UIElements;
+using Unity.VisualScripting;
 
 public class ScriptableObjectIdAttribute : PropertyAttribute { }
 
@@ -43,7 +45,7 @@ public abstract class UpgradeableValueScriptableObject<T> : ScriptableObject
     // These are in the form of the final    values not how they change
     [SerializeField] public List<Upgrade> upgrades = new List<Upgrade>();
 
-    private int currentUpgrade = -1;
+    [SerializeField] private int currentUpgrade = -1;
 
 
     /// <summary>
@@ -83,6 +85,19 @@ public abstract class UpgradeableValueScriptableObject<T> : ScriptableObject
     {
         if (IsFullyUpgraded()) { return -1; }
         return upgrades[currentUpgrade + 1].cost;
+    }
+
+    public T GetNextUpgradeValue()
+    {
+        return upgrades[currentUpgrade + 1].value;
+    }
+
+    public bool CanUpgrade()
+    {
+        if (upgrades.Count == 0) return false;
+        if (IsFullyUpgraded()) return false;
+        if (currentUpgrade > upgrades.Count) return false;
+        return true;
     }
 
     public string GetAllUpgradesAndCosts()

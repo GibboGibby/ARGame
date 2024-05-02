@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform playerTransform;
 
     [SerializeField] private WeaponManager weaponManager;
+    [SerializeField] private PlayerRaycastController playerRaycastController;
 
     [SerializeField] private int pointsPerHit;
     [SerializeField] private int pointsPerKill;
@@ -20,11 +21,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject UpgradeStuff;
     [SerializeField] private GameObject MenuStuff;
 
-    [SerializeField] private WeaponScriptableObject currentWeapon;
+    //[SerializeField] private WeaponScriptableObject currentWeapon;
 
     [SerializeField] private ARPlaneManager planeManager;
 
     [SerializeField] private ZombieSpawner spawner;
+    [SerializeField] private MenuManager menuManager;
+
+    private float timeSpentGaming = 0f;
 
     public int pointsPerRound = 0;
 
@@ -57,12 +61,43 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (menuManager.inGame)
+        {
+            timeSpentGaming += Time.deltaTime;
+        }
+    }
+
+    public float TimeSpentGaming()
+    {
+        return timeSpentGaming;
+    }
+
+    public void ResetTimeSpentGaming()
+    {
+        timeSpentGaming = 0f;
+    }
+
+    private int currentAmmo;
+
+    public int GetCurrentAmmo()
+    {
+        return currentAmmo;
+    }
+
+    public void RemoveAmmo(int amt = 1)
+    {
+        currentAmmo -= amt;
+        if (currentAmmo < 0) currentAmmo = 0;
+    }
+
+    public void ReloadWeapon()
+    {
+        currentAmmo = playerStats.currentWeapon.ammoPerMagazine.GetValue();
     }
 
     public WeaponScriptableObject GetCurrentWeapon()
     {
-        return currentWeapon;
+        return playerStats.currentWeapon;
     }
 
     public WeaponManager GetWeaponManager()
@@ -70,11 +105,25 @@ public class GameManager : MonoBehaviour
         return weaponManager;
     }
 
+    public MenuManager GetMenuManager()
+    {
+        return menuManager;
+    }
+
 
     public void PlayerDied()
     {
         playerStats.Points += pointsPerRound;
-        pointsPerRound = 0;
+        //pointsPerRound = 0;
+        GameObject[] zombies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (GameObject obj in zombies)
+        {
+            Destroy(obj);
+        }
+        spawner.enabled = false;
+        playerRaycastController.SetHealth(playerStats.MaxHealth.GetValue());
+        menuManager.ChangeState("gameover");
+        
     }
 
     public void AddHitPoints(float multiplier)
@@ -103,6 +152,20 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         spawner.enabled = true;
+        currentAmmo = playerStats.currentWeapon.ammoPerMagazine.GetValue();
     }
 
+    public void ResetProgress()
+    {
+        PlayerPrefs.DeleteKey("FirstTimeBoot");
+
+        playerStats.ResetProgress();
+        weaponManager.ResetProgress();
+    }
+
+    public void ChangeWeapon(WeaponsEnum weapon)
+    {
+        playerStats.currentWeapon = weaponManager.GetWeapon(weapon);
+        currentAmmo = weaponManager.GetWeapon(weapon).ammoPerMagazine.GetValue();
+    }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -25,10 +26,9 @@ public class ZombieSpawner : MonoBehaviour
     [SerializeField] private MinMaxValues<float> timeBetweenSpawningPerWave;
     [SerializeField] private float timeToGetToFullWave;
 
-    void Start()
-    {
-        
-    }
+    
+
+    
 
     private float waveTimer = 0.0f;
     private float totalTimer = 0.0f;
@@ -36,6 +36,8 @@ public class ZombieSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Z)) DebugSpawnZombie();
+
         totalTimer += Time.deltaTime;
         waveTimer += Time.deltaTime;
 
@@ -54,6 +56,14 @@ public class ZombieSpawner : MonoBehaviour
         }
         
         
+    }
+
+    public void DebugSpawnZombie()
+    {
+        Vector3 playerForward = GameManager.Instance.PlayerTransform.forward;
+        Vector3 spawnPos = playerForward * spawnDistance;
+        spawnPos.y = GameManager.Instance.PlayerTransform.position.y - 1.25f;
+        Instantiate(zombiePrefab, spawnPos, Quaternion.identity);
     }
 
     public void SpawnZombie()

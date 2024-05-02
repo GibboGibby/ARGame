@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: ReloadSpeed
   m_EditorClassIdentifier: 
   type: float
-  defaultValue: 1
+  defaultValue: 2
   upgrades:
   - value: 0.7
     cost: 2000
   - value: 0.3
     cost: 10000
+  currentUpgrade: -1

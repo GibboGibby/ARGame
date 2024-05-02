@@ -9,13 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45abe871605ee1245b512c0bde2d7d53, type: 3}
-  m_Name: ReloadSpeed
+  m_Script: {fileID: 11500000, guid: 20662c372e3f6d8408574b7dfc521006, type: 3}
+  m_Name: PlayerHealth
   m_EditorClassIdentifier: 
-  type: float
-  defaultValue: 1
+  type: int
+  defaultValue: 3
   upgrades:
-  - value: 0.7
-    cost: 2000
-  - value: 0.3
-    cost: 10000
+  - value: 4
+    cost: 25000
+  - value: 5
+    cost: 100000
+  currentUpgrade: -1
