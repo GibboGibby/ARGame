@@ -14,6 +14,8 @@ public class MenuManager : MonoBehaviour
         Game
     }
 
+    public static bool GoingToGame;
+
     [SerializeField] private GameObject Menu;
     [SerializeField] private GameObject Upgrades;
     [SerializeField] private GameObject DefinePlayArea;
@@ -37,12 +39,16 @@ public class MenuManager : MonoBehaviour
         switch (state)
         {
             case MenuState.Menu:
+                ToMenu();
                 break;
             case MenuState.Upgrades:
+                ToUpgrades();
                 break;
             case MenuState.DefinePlayArea:
+                ToDefinePlayArea();
                 break;
             case MenuState.Game:
+                ToGame();
                 break;
             default:
                 break;
@@ -66,11 +72,13 @@ public class MenuManager : MonoBehaviour
     public void ToGame()
     {
         HideAll();
-        if (!GameManager.planesFound)
+        if (!GameManager.planesFound && !MenuManager.GoingToGame)
         {
+            MenuManager.GoingToGame = true;
             ToDefinePlayArea();
             return;
-        }    
+        }
+        MenuManager.GoingToGame = false;
         Game.SetActive(true);
         GameManager.Instance.StartGame();
     }
@@ -114,5 +122,13 @@ public class MenuManager : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void DoneDefiningPlayArea()
+    {
+        if (MenuManager.GoingToGame)
+            ChangeState(MenuState.Game);
+        else
+            ChangeState(MenuState.Menu);
     }
 }
