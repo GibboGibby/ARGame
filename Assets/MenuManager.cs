@@ -26,6 +26,8 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private GameObject Game;
     [SerializeField] private GameObject GameOver;
 
+   
+
     void Start()
     {
         GameManager.Instance.SetDetection(false);
@@ -37,6 +39,7 @@ public class MenuManager : MonoBehaviour
     {
         
     }
+
 
 
     public void ChangeState(MenuState state)

@@ -21,3 +21,7 @@ MonoBehaviour:
   damage: {fileID: 11400000, guid: a640b1af876576d45bc6057165eb3dc7, type: 2}
   reloadSpeed: {fileID: 11400000, guid: 756c226ecfc68dd4fa8e09cbd92193d3, type: 2}
   penetration: {fileID: 11400000, guid: 6e3b6400f351ca6428eda574e4b269db, type: 2}
+  shotClip: {fileID: 8300000, guid: 24c3adf66b209a04892a1c2c93f86db2, type: 3}
+  reloadClip: {fileID: 8300000, guid: c581e7b4f4506e14b8d88bb10884fe1e, type: 3}
+  volumeShot: 0.2
+  volumeReload: 1

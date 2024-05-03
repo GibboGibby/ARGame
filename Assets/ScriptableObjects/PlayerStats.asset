@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: PlayerStats
   m_EditorClassIdentifier: 
   MaxHealth: {fileID: 11400000, guid: fb1e85b2c2fa10547b15ab281d85e5dc, type: 2}
-  Points: 0
+  Points: 99835000
   startingWeapon: {fileID: 11400000, guid: 4b7cc623b28585640816fb04edd93807, type: 2}
-  currentWeapon: {fileID: 11400000, guid: 4b7cc623b28585640816fb04edd93807, type: 2}
+  currentWeapon: {fileID: 11400000, guid: 2f271c28b90b0434fab6535d3a394ba8, type: 2}

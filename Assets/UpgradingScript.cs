@@ -36,6 +36,7 @@ public class UpgradingScript<T> : MonoBehaviour
 
     public void UpgradeClicked()
     {
+        if (upgradingValue.GetCostForNextUpgrade() == -1) return;
         if (GameManager.Instance.playerStats.Points >= upgradingValue.GetCostForNextUpgrade())
         {
             GameManager.Instance.playerStats.Points -= upgradingValue.GetCostForNextUpgrade();
@@ -47,8 +48,8 @@ public class UpgradingScript<T> : MonoBehaviour
     private void UpdateValues()
     {
         value.text = upgradingValue.GetValue().ToString();
-        bool unlocked = (parentPanel == null) ? false : !parentPanel.WeaponUnlocked(); 
-        if (!upgradingValue.CanUpgrade() || unlocked)
+        bool unlocked = (parentPanel == null) ? true : parentPanel.WeaponUnlocked(); 
+        if (!upgradingValue.CanUpgrade() || !unlocked)
         {
             costValue.gameObject.SetActive(false);
             costText.gameObject.SetActive(false);
@@ -56,6 +57,14 @@ public class UpgradingScript<T> : MonoBehaviour
             nextValue.gameObject.SetActive(false);
             nextText.gameObject.SetActive(false);
             return;
+        }
+        else
+        {
+            costValue.gameObject.SetActive(true);
+            costText.gameObject.SetActive(true);
+            upgradeButton.gameObject.SetActive(true);
+            nextValue.gameObject.SetActive(true);
+            nextText.gameObject.SetActive(true);
         }
 
 
@@ -68,8 +77,13 @@ public class UpgradingScript<T> : MonoBehaviour
             upgradeButton.GetComponent<Image>().color = Color.grey;
         }
 
-        costValue.text = upgradingValue.GetCostForNextUpgrade().ToString();
         
-        nextValue.text = upgradingValue.GetNextUpgradeValue().ToString();
+        if (upgradingValue.CanUpgrade() && unlocked)
+        {
+            costValue.text = upgradingValue.GetCostForNextUpgrade().ToString();
+            nextValue.text = upgradingValue.GetNextUpgradeValue().ToString();
+        }
+
+        
     }
 }

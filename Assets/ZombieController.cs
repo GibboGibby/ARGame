@@ -16,10 +16,17 @@ public class ZombieController : MonoBehaviour
 
     [SerializeField] private List<Collider> colliders = new List<Collider>();
 
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip zombieGrowl;
+    [SerializeField] private float growlVolume = 1.0f;
+    [SerializeField] private float timeBetweenGrowl;
+
     private float health = 100f;
 
     private NavMeshAgent agent;
     bool dying = false;
+
+    private float timer = 0f;
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -33,6 +40,7 @@ public class ZombieController : MonoBehaviour
         slider.gameObject.SetActive(false);
         spawning = true;
         agent.enabled = false;
+        audioSource.PlayOneShot(zombieGrowl, growlVolume);
         foreach (Collider collider in colliders)
         {
             collider.enabled = false;
@@ -47,6 +55,9 @@ public class ZombieController : MonoBehaviour
             collider.enabled = true;
         }
         spawning = false;
+
+        timeBetweenGrowl += zombieGrowl.length;
+        
     }
 
     // Update is called once per frame
@@ -54,6 +65,12 @@ public class ZombieController : MonoBehaviour
     {
         if (dying || spawning) return;
 
+        timer += Time.deltaTime;
+        if (timer >= timeBetweenGrowl)
+        {
+            audioSource.PlayOneShot(zombieGrowl, growlVolume);
+            timer = 0f;
+        }
         if (Input.GetKeyDown(KeyCode.P))
         {
             EnemyDied();

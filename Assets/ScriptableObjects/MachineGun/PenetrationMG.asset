@@ -10,15 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 20662c372e3f6d8408574b7dfc521006, type: 3}
-  m_Name: AmmoCount
+  m_Name: PenetrationMG
   m_EditorClassIdentifier: 
   type: int
-  defaultValue: 30
+  defaultValue: 0
   upgrades:
-  - value: 40
-    cost: 10000
-  - value: 50
-    cost: 50000
-  - value: 60
-    cost: 100000
+  - value: 1
+    cost: 75000
+  - value: 2
+    cost: 500000
   currentUpgrade: -1

@@ -33,11 +33,14 @@ public class PlayerRaycastController : MonoBehaviour
     
     void Start()
     {
-        health = maxHealth;
-        healthText.text = $"Health - {health}/{maxHealth}";
+        
     }
 
-
+    public void StartGameHealth()
+    {
+        health = GameManager.Instance.playerStats.MaxHealth.GetValue();
+        healthText.text = $"Health - {health}/{GameManager.Instance.playerStats.MaxHealth.GetValue()}";
+    }
 
     // Update is called once per frame
 
@@ -61,6 +64,8 @@ public class PlayerRaycastController : MonoBehaviour
     {
         if (reloading) return;
         if (GameManager.Instance.GetCurrentAmmo() == GameManager.Instance.GetCurrentWeapon().ammoPerMagazine.GetValue()) return;
+        GameManager.Instance.GetAudioSource().pitch = GameManager.Instance.GetCurrentWeapon().reloadClip.length / GameManager.Instance.GetCurrentWeapon().reloadSpeed.GetValue();
+        GameManager.Instance.GetAudioSource().PlayOneShot(GameManager.Instance.GetCurrentWeapon().reloadClip, GameManager.Instance.GetCurrentWeapon().volumeReload);
         StartCoroutine(ReloadCoroutine());
     }
 
@@ -91,7 +96,7 @@ public class PlayerRaycastController : MonoBehaviour
     public void SetHealth(int val)
     {
         health = val;
-        healthText.text = $"Health - {health}/{GameManager.Instance.playerStats.MaxHealth}";
+        healthText.text = $"Health - {health}/{GameManager.Instance.playerStats.MaxHealth.GetValue()}";
     }
 
 
@@ -101,6 +106,8 @@ public class PlayerRaycastController : MonoBehaviour
         Debug.Log("Shooting");
         canShoot = false;
         GameManager.Instance.RemoveAmmo();
+        GameManager.Instance.GetAudioSource().pitch = 1f;
+        GameManager.Instance.GetAudioSource().PlayOneShot(GameManager.Instance.GetCurrentWeapon().shotClip, GameManager.Instance.GetCurrentWeapon().volumeShot);
         RaycastHit[] hits;
         hits = Physics.RaycastAll(camera.transform.position, camera.transform.forward, Mathf.Infinity);
         Array.Sort(hits, new RaycastHitComprarer());
@@ -138,7 +145,7 @@ public class PlayerRaycastController : MonoBehaviour
         if (collision.collider.CompareTag("Enemy"))
         {
             health--;
-            healthText.text = $"Health - {health}/{GameManager.Instance.playerStats.MaxHealth}";
+            healthText.text = $"Health - {health}/{GameManager.Instance.playerStats.MaxHealth.GetValue()}";
             Destroy(collision.gameObject);
             Handheld.Vibrate();
             if (health <= 0)

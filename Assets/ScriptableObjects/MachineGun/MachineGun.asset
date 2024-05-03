@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MachineGun
   m_EditorClassIdentifier: 
   cost: 30000
-  unlocked: 0
+  unlocked: 1
   unlockedByDefault: 0
   singleShot: 0
   fireRate: {fileID: 11400000, guid: 8a9788fde44038a46947801c7384a903, type: 2}
@@ -21,3 +21,7 @@ MonoBehaviour:
   damage: {fileID: 11400000, guid: b1b22ce4dff9a32468fa1e1e4be59a1b, type: 2}
   reloadSpeed: {fileID: 11400000, guid: 8394620cf6e65aa4db2a303bada78402, type: 2}
   penetration: {fileID: 11400000, guid: 4a3dd78856bc6a14890d2a732c230be5, type: 2}
+  shotClip: {fileID: 8300000, guid: 357deb848c500d84480e785d4377d7b4, type: 3}
+  reloadClip: {fileID: 8300000, guid: 4190e62f50d2fb64ba27fea004ec33eb, type: 3}
+  volumeShot: 0.2
+  volumeReload: 0.4

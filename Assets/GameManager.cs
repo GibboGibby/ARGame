@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ZombieSpawner spawner;
     [SerializeField] private MenuManager menuManager;
 
+    [SerializeField] private AudioSource playerAudioSource;
+
     private float timeSpentGaming = 0f;
 
     public int pointsPerRound = 0;
@@ -153,6 +155,7 @@ public class GameManager : MonoBehaviour
     {
         spawner.enabled = true;
         currentAmmo = playerStats.currentWeapon.ammoPerMagazine.GetValue();
+        playerRaycastController.StartGameHealth();
     }
 
     public void ResetProgress()
@@ -167,5 +170,10 @@ public class GameManager : MonoBehaviour
     {
         playerStats.currentWeapon = weaponManager.GetWeapon(weapon);
         currentAmmo = weaponManager.GetWeapon(weapon).ammoPerMagazine.GetValue();
+    }
+
+    public AudioSource GetAudioSource()
+    {
+        return playerAudioSource;
     }
 }

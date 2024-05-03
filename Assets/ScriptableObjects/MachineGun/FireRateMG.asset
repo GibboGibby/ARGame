@@ -10,9 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 45abe871605ee1245b512c0bde2d7d53, type: 3}
-  m_Name: Damage
+  m_Name: FireRateMG
   m_EditorClassIdentifier: 
   type: float
-  defaultValue: 12
-  upgrades: []
+  defaultValue: 0.2
+  upgrades:
+  - value: 0.1
+    cost: 1000
+  - value: 0.05
+    cost: 3000
   currentUpgrade: -1

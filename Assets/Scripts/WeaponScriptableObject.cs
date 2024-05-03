@@ -23,6 +23,12 @@ public class WeaponScriptableObject : ScriptableObject
     public FloatUpgradableValue reloadSpeed;
     public IntUpgradableValue penetration;
 
+    [Header("Other")]
+    public AudioClip shotClip;
+    public AudioClip reloadClip;
+    public float volumeShot = 1f;
+    public float volumeReload = 1f;
+
     
 
     public void ResetWeapon()
